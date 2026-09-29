@@ -37,6 +37,9 @@ function buildSearchable(entries: BnsSection[]): SearchableRecord[] {
   }));
 }
 
+/** Minimum combined relevance for a provision to be shown at all. */
+const MIN_RELEVANCE = 0.12;
+
 const FUSE_OPTIONS: IFuseOptions<SearchableRecord> = {
   includeScore: true,
   includeMatches: true,
@@ -75,12 +78,27 @@ export class BnsSearchEngine {
     const query = normalizeText(rawQuery);
     if (query.length === 0) return [];
 
-    const fuseResults = this.fuse.search(query);
     const tokens = significantTokens(rawQuery);
 
-    const scored = fuseResults.map((r) => {
-      const entry = r.item.entry;
-      const fuseScore = r.score ?? 1; // 0 = perfect, 1 = worst
+    // Fuse is used for fuzzy/typo tolerance. A long sentence rarely fuzzy-
+    // matches any single field as a whole, so we also search each significant
+    // word separately and keep each entry's best (lowest) Fuse score.
+    const fuseScoreById = new Map<string, number>();
+    const fuseQueries = [query, ...tokens.filter((t) => t.length >= 3)];
+    for (const fq of fuseQueries) {
+      for (const r of this.fuse.search(fq)) {
+        const id = r.item.entry.id;
+        const s = r.score ?? 1;
+        const prev = fuseScoreById.get(id);
+        if (prev === undefined || s < prev) fuseScoreById.set(id, s);
+      }
+    }
+
+    // Score every record (the dataset is small), not only Fuse candidates,
+    // so exact keyword/alias hits are never lost when Fuse finds nothing.
+    const scored = this.records.map((rec) => {
+      const entry = rec.entry;
+      const fuseScore = fuseScoreById.get(entry.id) ?? 1; // 0 = perfect, 1 = worst
 
       // --- Weighted bonus pass, per spec §6 ---
       let bonus = 0;
@@ -141,21 +159,25 @@ export class BnsSearchEngine {
         if (overlap > 0) bonus += Math.min(0.08, overlap * 0.02);
       }
 
-      // Clarification-driven nudges
-      for (const answer of clarifications) {
-        bonus += applyClarificationNudge(entry, answer);
+      // Combine: fuseScore is "distance" (lower=better); invert to a 0..1
+      // relevance, then add our bonus.
+      const fuseRelevance = 1 - fuseScore;
+      let base = fuseRelevance * 0.5 + bonus;
+
+      // Clarification-driven nudges only re-rank entries that already matched
+      // the description — they never pull an unrelated provision into results.
+      if (base >= MIN_RELEVANCE) {
+        for (const answer of clarifications) {
+          base += applyClarificationNudge(entry, answer);
+        }
       }
 
-      // Combine: fuseScore is "distance" (lower=better); invert to a 0..1
-      // relevance, then add our bonus, then clamp.
-      const fuseRelevance = 1 - fuseScore;
-      const combined = Math.max(0, Math.min(1, fuseRelevance * 0.5 + bonus));
+      const combined = Math.max(0, Math.min(1, base));
 
       return {
         entry,
         rawScore: combined,
         matchedTerms: Array.from(matchedTerms),
-        fuseMatches: r.matches ?? [],
       };
     });
 
@@ -167,7 +189,7 @@ export class BnsSearchEngine {
     }
 
     const ranked = Array.from(byId.values())
-      .filter((s) => s.rawScore >= 0.12) // drop near-zero noise
+      .filter((s) => s.rawScore >= MIN_RELEVANCE) // drop near-zero noise
       .sort((a, b) => b.rawScore - a.rawScore)
       .slice(0, 12);
 

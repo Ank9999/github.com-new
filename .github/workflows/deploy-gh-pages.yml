@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       # No package-lock.json is committed yet, so use `npm install` (npm ci
       # requires a lockfile). Commit the generated lockfile later to pin versions.
       - run: npm install
