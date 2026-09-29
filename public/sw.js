@@ -4,7 +4,8 @@
 // is cached, searching requires no network at all.
 
 const CACHE_NAME = "bns-finder-v1";
-const APP_SHELL = ["/", "/index.html", "/manifest.json"];
+// Relative to this script, so it works at the domain root or under a sub-path.
+const APP_SHELL = ["./", "./index.html", "./manifest.json"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

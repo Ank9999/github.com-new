@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { APP_CONFIG } from "../data/config";
 
 export default function About() {
@@ -28,7 +29,7 @@ export default function About() {
           It is not a legal advice service, a guilt-determination tool, or a substitute for a lawyer, the
           police, or a court. It never states that a person is guilty, and it never estimates a probability of
           conviction. Final charging decisions depend on the complete facts, investigation, applicable special
-          laws, and judicial determination — see the <a className="text-saffron-600 underline dark:text-saffron-400" href="/disclaimer">Disclaimer</a> for details.
+          laws, and judicial determination — see the <Link className="text-saffron-600 underline dark:text-saffron-400" to="/disclaimer">Disclaimer</Link> for details.
         </p>
 
         <h2 className="text-lg font-semibold text-navy-900 dark:text-white">Data sources</h2>
@@ -61,7 +62,7 @@ export default function About() {
         <h2 className="text-lg font-semibold text-navy-900 dark:text-white">How it works technically</h2>
         <p>
           This is a fully static, client-side application. Your search text never leaves your device — there
-          is no backend, no AI model call, and no account. See the <a className="text-saffron-600 underline dark:text-saffron-400" href="/privacy">Privacy</a> page for details.
+          is no backend, no AI model call, and no account. See the <Link className="text-saffron-600 underline dark:text-saffron-400" to="/privacy">Privacy</Link> page for details.
         </p>
       </div>
     </div>

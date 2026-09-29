@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { SearchX, History, Trash2, ShieldCheck } from "lucide-react";
 import SearchBox from "../components/SearchBox";
 import ResultCard from "../components/ResultCard";
@@ -174,9 +174,9 @@ export default function Home({ dataset }: { dataset: BnsSection[] }) {
                 <li>Check spelling, or try a Hindi/Hinglish phrase</li>
                 <li>Browse BNS categories instead</li>
               </ul>
-              <a href="/browse" className="btn-secondary mt-2 text-sm">
+              <Link to="/browse" className="btn-secondary mt-2 text-sm">
                 Browse BNS Categories
-              </a>
+              </Link>
             </div>
           )}
         </section>
