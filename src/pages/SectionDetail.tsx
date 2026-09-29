@@ -51,9 +51,12 @@ export default function SectionDetail({ dataset }: { dataset: BnsSection[] }) {
     .map((sec) => dataset.find((e) => e.id === sec || e.section === sec))
     .filter((e): e is BnsSection => Boolean(e));
 
+  // Capture the narrowed (non-undefined) entry so the closure below keeps it.
+  const currentEntry: BnsSection = entry;
+
   async function handleCopy() {
     try {
-      await navigator.clipboard.writeText(toClipboardText(entry));
+      await navigator.clipboard.writeText(toClipboardText(currentEntry));
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
