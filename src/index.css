@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid theme("colors.saffron.500");
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-navy-100 bg-white shadow-sm dark:border-navy-800 dark:bg-navy-900;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-navy-900 px-5 py-3 font-medium text-white transition hover:bg-navy-700 focus-visible:outline-saffron-500 dark:bg-saffron-500 dark:text-navy-950 dark:hover:bg-saffron-400;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-navy-200 bg-white px-4 py-2.5 font-medium text-navy-800 transition hover:border-navy-400 hover:bg-navy-50 dark:border-navy-700 dark:bg-navy-900 dark:text-navy-100 dark:hover:bg-navy-800;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-navy-200 bg-navy-50 px-3.5 py-1.5 text-sm font-medium text-navy-700 transition hover:border-saffron-400 hover:bg-saffron-50 hover:text-saffron-700 dark:border-navy-700 dark:bg-navy-800 dark:text-navy-200 dark:hover:border-saffron-500 dark:hover:bg-navy-800/60 dark:hover:text-saffron-400;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+}
+
+mark {
+  @apply rounded bg-saffron-200 px-0.5 text-navy-900 dark:bg-saffron-500/40 dark:text-white;
+}

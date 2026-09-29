@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ank9999.github.io/github.com-new/sitemap.xml

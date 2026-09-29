@@ -1,0 +1,57 @@
+{
+  "threatened": [
+    "Threatened to kill",
+    "Threatened for money",
+    "Threatened through phone",
+    "Threatened with a weapon",
+    "Threatened to harm my family"
+  ],
+  "stole": [
+    "Stole my phone",
+    "Stole my bike",
+    "Stole cash from my bag",
+    "Stole jewellery from my house"
+  ],
+  "hit": [
+    "Hit and injured me",
+    "Hit me with a stick",
+    "Hit me during an argument",
+    "Group of people hit me"
+  ],
+  "fraud": [
+    "Online fraud took my money",
+    "Fake investment fraud",
+    "UPI fraud",
+    "Fraud using fake documents"
+  ],
+  "broke": [
+    "Broke into my house",
+    "Broke my car window",
+    "Broke into my house and stole jewellery"
+  ],
+  "attacked": [
+    "Attacked with a knife",
+    "Attacked by a group",
+    "Attacked and seriously injured"
+  ],
+  "kidnap": [
+    "Kidnapped a child",
+    "Kidnapped for ransom",
+    "Kidnapped and threatened to kill"
+  ],
+  "forged": [
+    "Forged my signature",
+    "Forged documents for a loan",
+    "Used a fake certificate"
+  ],
+  "chori": [
+    "Chori ho gayi",
+    "Mobile chori ho gaya",
+    "Ghar mein chori"
+  ],
+  "dhamki": [
+    "Jaan se maarne ki dhamki di",
+    "Paise ke liye dhamki di",
+    "Phone par dhamki di"
+  ]
+}
