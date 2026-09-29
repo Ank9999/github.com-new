@@ -22,8 +22,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-      - run: npm ci
+      # No package-lock.json is committed yet, so use `npm install` (npm ci
+      # requires a lockfile). Commit the generated lockfile later to pin versions.
+      - run: npm install
       - run: npm run validate-data
       - run: npm test -- --run
       - name: Build (GitHub Pages base path)
