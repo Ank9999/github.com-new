@@ -25,24 +25,16 @@ shown with missing or guessed information (see **Data quality gate** below).
 The BNS has 358 sections in total. This dataset is intentionally curated rather than exhaustive — see
 **Extending the dataset** for how to add more sections without touching any UI code.
 
-## A note on this build environment
+## Build & deployment status
 
-This project was generated in a sandboxed cloud environment whose outbound network access is restricted to a
-small allowlist that did **not** include the npm registry, so `npm install` could not be run here and the
-production build could not be executed or verified in this session. Everything below reflects what actually
-happened:
+Live at **https://ank9999.github.io/github.com-new/**, deployed by the GitHub Actions workflow in
+`.github/workflows/deploy-gh-pages.yml`. On every push to `main`, CI installs dependencies, runs
+`npm run validate-data` (17/17 records pass), runs the full Vitest suite (28 tests), type-checks and builds
+with Vite, and deploys to GitHub Pages.
 
-- The legal dataset was hand-verified against primary sources during research (India Code, Ministry of Home
-  Affairs commencement notices, and case-by-case bare-act text cross-checks) — not generated after the fact.
-- `scripts/validateData.mjs` has **zero third-party dependencies** (plain Node `fs`/`URL`), so it *was* run
-  successfully in this environment: all 17 records pass with 0 errors, 0 warnings.
-- The search engine's scoring logic was sanity-tested against every example query from the spec (see below)
-  using a temporary local stand-in for Fuse.js's public API, and a real bug (`r.entry` vs. the correct
-  `r.item` on a Fuse.js search result) was found and fixed this way.
-- The React build itself (`npm run build`) has **not** been executed. On a machine with normal internet
-  access, running `npm install && npm run build` is expected to produce a working `dist/` — the project
-  follows standard, current Vite/React/TypeScript/Tailwind conventions throughout — but you should run it
-  once yourself and skim for any dependency-version hiccup before deploying.
+No `package-lock.json` is committed yet, so CI uses `npm install` rather than `npm ci`. To pin exact
+dependency versions, run `npm install` locally once, commit the generated `package-lock.json`, and switch
+the workflow back to `npm ci`.
 
 ## Requirements
 
@@ -125,10 +117,11 @@ Either run `netlify deploy --prod` (Netlify CLI) or connect the repo in the Netl
 
 A ready-to-use workflow lives at `.github/workflows/deploy-gh-pages.yml`. Before your first deploy:
 
-1. In that file, replace `VITE_BASE_PATH: /<REPO_NAME>/` with your actual repository name, e.g. `/bns-section-finder/`.
+1. In that file, set `VITE_BASE_PATH` to your repository name with slashes, e.g. `/bns-section-finder/` (currently `/github.com-new/`).
 2. In the repo settings, set **Pages → Source → GitHub Actions**.
 3. Push to `main` — the workflow installs dependencies, validates the dataset, runs tests, builds with the
-   correct base path (`vite.config.ts` reads `VITE_BASE_PATH`), and deploys.
+   correct base path (`vite.config.ts` reads `VITE_BASE_PATH`; the router uses it as `basename`), copies
+   `index.html` to `404.html` so deep links like `/section/303` work, and deploys.
 
 If you deploy to a **custom domain** or to the domain root (Vercel/Netlify), leave `VITE_BASE_PATH` unset —
 `vite.config.ts` defaults to `/`.
